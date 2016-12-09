@@ -2,7 +2,7 @@
  * Sortable HTML table
  * @author Joao Rodrigues (JR) - Jan2009
  * @see Example at http://www.jrfaq.com.br/sortable.htm
- * @classDescription This code is intended to sort more than one table
+ * @description This code is intended to sort more than one table
  * at the same time, either by their thead or tfoot sections. After numerous
  * attempts, I discovered that the code runs much faster for large tables
  * whenever sorted 'tbody' and other frequently used properties
@@ -264,7 +264,7 @@ var jrSortTables = {};
          */
         var sortfn, testDate;
         if (txtCell.length > 0) {
-          // if (txtCell.match(/^\-?[R$£€¤\s]*?[\d,.]+%?$/)) {
+          // if (txtCell.match(/^\-?[R$Â£Â€Â¤\s]*?[\d,.]+%?$/)) {
           if (txtCell.match(/^\-?\D*?[\d,.]+[\s%]*?$/)) { // currency, number or percentile
             return sortFunctions.sortNumberJS;
           }
