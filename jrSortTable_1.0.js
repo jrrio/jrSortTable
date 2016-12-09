@@ -8,20 +8,15 @@
  * whenever sorted 'tbody' and other frequently used properties
  * are stored in jrSortTables.tableProp.
  *
- * @version 0.6 - 2009-10-23 - optimized for IE 7, FF3 and Safari 3.
- * In this version I removed the GetElementsByClass() function by Dustin Diaz
- * and changed line 173 thru 177 due to Stephane Moriaux's advice.
- *
- * @version 0.8 - 2011-04-21 - code optimizations.
- * @version 0.9 - 2011-12-15 - code optimizations.
- * @version 1.1 - 2012-02-18 - more optimizations, allow sorting non english
- *                numbers such as 1.453.932,67, and use of specific class
- *                names in TH cells to define the sort method.
+ * 2009-10-23 - optimized for IE 7, FF3 and Safari 3.
+ * 2011-12-15 - code optimizations.
+ * 2012-02-18 - allow sorting non english numbers such 
+ *              as 1.453.932,67, and use of specific class
+ *              names in TH cells to define the sort method.
  *
  * Some concepts were adapted from http://www.webtoolkit.info/sortable-html-table.html,
  * and http://www.kryogenix.org/code/browser/sorttable/ by Stuart Langridge.
- * Many thanks to Jorge Chamorro http://homepage.mac.com/jorgechamorro/cljs/029/
- * and Stephane Moriaux (SAM).
+ * Many thanks to Jorge Chamorro and Stephane Moriaux (SAM).
  */
 var jrSortTables = {};
 
