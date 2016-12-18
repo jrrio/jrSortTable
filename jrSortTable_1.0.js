@@ -97,18 +97,18 @@ var jrSortTables = {};
     // Append fragment to tbody in just one operation.
     tbody.appendChild(fragment);
 
-    // Change row's backgroundColor.
+    /* Changing row's backgroundColor should be done in CSS
+     * with tbody tr:nth-of-type(odd) { background-color: #f0f0f0; }
+     * tbody tr:nth-of-type(even) { background-color: #fff; }
     // It's quicker to do it here than during fragment.appendChild(row) - valid for IE7 but not FF3
     tbr = tbody.rows;
     len = tbr.length;
-    while (len--) { // Stephane Moriaux's advice
-      // instead of
-      // tbr[len].style.backgroundColor = ((len % 2 === 0) ? "#f0f0f0" : "#ffffff");
-      // use:
+    while (len--) {
       //tbr[len].className = ((len % 2 === 0) ? 'odd' : 'even');
       // bitwise AND 1 is faster than len % 2 - hint from Nicholas Zakas' book.
       tbr[len].className = (len & 1) ? 'odd' : 'even';
     }
+    */
 
     // Finally, change the arrow direction in the th node
     oldSpanElem = document.getElementById(prop.spanArrowId);
