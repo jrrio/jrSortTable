@@ -1,4 +1,5 @@
-##jrSortTable
+#jrSortTable
+
 We can use JavaScript to sort the columns of a data table directly on the client side (i.e web browser). We just need to follow these steps:
 
 1. Set the *class* attribute of the data tables with "sortable".
