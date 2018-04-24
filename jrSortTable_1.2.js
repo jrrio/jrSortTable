@@ -238,7 +238,7 @@ var jrSortTables = {};
          */
         var sortfn, testDate;
         if (txtCell.length > 0) {
-          // if (txtCell.match(/^\-?[R$£€¤\s]*?[\d,.]+%?$/)) {
+          // if (txtCell.match(/^\-?[R$Â£Â€Â¤\s]*?[\d,.]+%?$/)) {
           if (txtCell.match(/^-?\D*?[\d,.]+[\s%]*?$/)) { // currency, number or percentile
             return sortFunctions.sortNumberJS;
           }
@@ -332,4 +332,4 @@ var jrSortTables = {};
 
 }());
 
-document.addEventListener('load', jrSortTables.setup);
+window.addEventListener('load', jrSortTables.setup, false);
