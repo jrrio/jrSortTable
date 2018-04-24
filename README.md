@@ -19,10 +19,13 @@ The code tries to guess the value type (Number, Date, String) of each column bas
 
 **Note:** By default, the code expects numbers formatted as "9,999.99" (UK, USA, etc.). So, if you need to sort numbers formatted as "9.999,99" (comma as the decimal separator and period as the thousands separator), you will need to set the *class* attribute of the *TH* element (column) with *sortNumber_nonJS*.
 
-If you want to understand how the code works, you may use your [browser developer tools](http://devtoolsecrets.com/) to debug it.
-
 There is an example on [Codepen](https://codepen.io/jrio/pen/bvPmLo).
 
-Cheers.
+# Changelog
 
-    João Rodrigues (JR)
+* @version 0.1 - 2009-01-15 - first version.
+* @version 0.6 - 2009-10-23 - optimized for IE 7, FF3 and Safari 3. In this version I removed the GetElementsByClass() function by Dustin Diaz and changed line 173 thru 177 due to Stephane Moriaux's advice.
+* @version 0.8 - 2011-04-21 - code optimizations.
+* @version 0.9 - 2011-12-15 - code optimizations.
+* @version 1.1 - 2012-02-18 - more optimizations, allow sorting non JS numbers such as 1.453.932,67, and use of specific class names in TH cells to define the sort method.
+* @version 1.2 - 2018-04-23 - fixed issues with negative numbers.
