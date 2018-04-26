@@ -7,7 +7,7 @@
  * attempts, I discovered that the code runs much faster for large tables
  * whenever sorted 'tbody' and other frequently used properties
  * are stored in jrSortTables.tableProp.
- * @version 1.2.1 - 2018-04-25 - code optimization.
+ * @version 1.3 - 2018-04-25 - code optimizations. IE11, Edge and modern browsers.
  */
 var jrSortTables = Object.create(null);
 
