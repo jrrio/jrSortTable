@@ -29,3 +29,4 @@ There is an example on [Codepen](https://codepen.io/jrio/pen/bvPmLo).
 * @version 0.9 - 2011-12-15 - code optimizations.
 * @version 1.1 - 2012-02-18 - more optimizations, allow sorting non JS numbers such as 1.453.932,67, and use of specific class names in TH cells to define the sort method.
 * @version 1.2 - 2018-04-23 - fixed issues with negative numbers.
+* @version 1.3 - 2018-04-25 - optimizations in code, and removed some old parts. Now the code runs in IE11, Edge and other modern browsers.

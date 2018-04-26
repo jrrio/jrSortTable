@@ -1,55 +1,33 @@
 /**
  * Sortable HTML table
  * @author Joao Rodrigues (JR) - Jan2009
- * @see Example at http://www.jrfaq.com.br/sortable.htm
+ * @see Example at <https://codepen.io/jrio/pen/bvPmLo>
  * @classDescription This code is intended to sort more than one table
  * at the same time, either by their thead or tfoot sections. After numerous
  * attempts, I discovered that the code runs much faster for large tables
  * whenever sorted 'tbody' and other frequently used properties
  * are stored in jrSortTables.tableProp.
- *
- * @version 0.6 - 2009-10-23 - optimized for IE 7, FF3 and Safari 3.
- * In this version I removed the GetElementsByClass() function by Dustin Diaz
- * and changed line 173 thru 177 due to Stephane Moriaux's advice.
- *
- * @version 0.8 - 2011-04-21 - code optimizations.
- * @version 0.9 - 2011-12-15 - code optimizations.
- * @version 1.1 - 2012-02-18 - more optimizations, allow sorting non english
- *                numbers such as 1.453.932,67, and use of specific class
- *                names in TH cells to define the sort method.
- * @version 1.2 - 2018-04-23 - fix problem with negative numbers in sorting functions.
- *
- * Some concepts were adapted from http://www.webtoolkit.info/sortable-html-table.html,
- * and http://www.kryogenix.org/code/browser/sorttable/ by Stuart Langridge.
- * Many thanks to Jorge Chamorro http://homepage.mac.com/jorgechamorro/cljs/029/
- * and Stephane Moriaux (SAM).
+ * @version 1.3 - 2018-04-25 - code optimizations. IE11, Edge and modern browsers.
  */
-var jrSortTables = {};
+var jrSortTables = Object.create(null);
 
 (function () {
+  'use strict';
 
-  var isMSIE = /*@cc_on!@*/ false; // Dean Edwards' browser sniff.
+  jrSortTables.arrows = {
+    up: '&nbsp;&#x25B4;',
+    down: '&nbsp;&#x25BE;'
+  };
 
-  /** tableProp array will be filled in the setup() function.
-   *  For each TableElem tableProp contains:
-   *  tableProp[tblNumber] = {
+  /**
+   * tableProp array will be filled in the setup() function.
+   * tableProp[tblNumber] = {
    *   'headerCells' : [], // contains [sortfn, sortdir, isSorted,
    *                       // currentSortedTBody] for each header cell.
    *   'spanArrowId' : "jrSortSpan" + tblNumber,
    *   'tbody' : tbody }
    */
   jrSortTables.tableProp = [];
-
-  /** Load-time branching pattern -> Code is optimized for IE7 because
-   *  of its slower performance when dealing with the DOM.
-   */
-  jrSortTables.arrows = {
-    /** Adapted by JR from Stuart Langridge's idea.
-     *  You can of course use images in css instead.
-     */
-    up: (isMSIE ? '&nbsp<font face="webdings">5</font>' : '&nbsp;&#x25B4;'),
-    down: (isMSIE ? '&nbsp<font face="webdings">6</font>' : '&nbsp;&#x25BE;')
-  };
 
   jrSortTables.sort = function (tblNumber, th) {
     // If table is already sorted by this column, then just apply sorting;
@@ -102,19 +80,6 @@ var jrSortTables = {};
     }
     // Append fragment to tbody in just one operation.
     tbody.appendChild(fragment);
-
-    // Change row's backgroundColor.
-    // It's quicker to do it here than during fragment.appendChild(row) - valid for IE7 but not FF3
-    tbr = tbody.rows;
-    len = tbr.length;
-    while (len--) { // Stephane Moriaux's advice
-      // instead of
-      // tbr[len].style.backgroundColor = ((len % 2 === 0) ? "#f0f0f0" : "#ffffff");
-      // use:
-      //tbr[len].className = ((len % 2 === 0) ? 'odd' : 'even');
-      // bitwise AND 1 is faster than len % 2 - hint from Nicholas Zakas' book.
-      tbr[len].className = (len & 1) ? 'odd' : 'even';
-    }
 
     // Finally, change the arrow direction in the th node
     oldSpanElem = document.getElementById(prop.spanArrowId);
@@ -216,7 +181,7 @@ var jrSortTables = {};
   jrSortTables.setup = function () {
 
     function prepareTables(tableElem, tblNumber) {
-      var the, thead, tbody, i, len, arrTh,
+      var thead, tbody, i, len, arrTh,
           fn, rxFn, sortFunctions = jrSortTables.sort_functions,
           arr = [];
 
@@ -232,13 +197,13 @@ var jrSortTables = {};
         }
       }
 
+      /** Try to guess the data type of the column's first cell. Assume
+       *  that the other cells of this column will have the same data type.
+       */
       function guessDataType(txtCell) {
-        /** Try to guess the data type of the column's first cell. Assume
-         *  that the other cells of this column will have the same data type.
-         */
         var sortfn, testDate;
         if (txtCell.length > 0) {
-          // if (txtCell.match(/^\-?[R$£¤\s]*?[\d,.]+%?$/)) {
+          // if (txtCell.match(/^\-?[R$£€¤\s]*?[\d,.]+%?$/)) {
           if (txtCell.match(/^-?\D*?[\d,.]+[\s%]*?$/)) { // currency, number or percentile
             return sortFunctions.sortNumberJS;
           }
@@ -259,7 +224,9 @@ var jrSortTables = {};
       }
 
       // Create a RegExp with the sort methods names.
-      for (i in sortFunctions) { arr.push(i); }
+      for (i in sortFunctions) {
+        if (sortFunctions.hasOwnProperty(i)) arr.push(i);
+      }
       rxFn = new RegExp(arr.join('|'));
 
       function getSortFn(className) {
@@ -268,21 +235,7 @@ var jrSortTables = {};
         return (found) ? sortFunctions[found[0]] : '';
       }
 
-      /* If there isn't a thead element in the table, let's create one.
-         Idea adapted from Stuart Langridge's sorttable code. */
-      if (tableElem.getElementsByTagName('thead').length === 0) {
-        (the = document.createElement('thead')).appendChild(tableElem.rows[0]);
-        tableElem.insertBefore(the, tableElem.firstChild);
-      }
-      // Old Safari versions don't support table.tHead
-      if (tableElem.tHead === null) {
-        tableElem.tHead = tableElem.getElementsByTagName('thead')[0];
-      }
-      // Can't cope with two header rows.
-      if (tableElem.tHead.rows.length !== 1) { return; }
-      // End of Stuart's code.
 
-      // JR's code.
       thead = tableElem.tHead;
       tbody = tableElem.tBodies[0];
       //if (tbody.rows.length === 0) { return; }
@@ -314,19 +267,11 @@ var jrSortTables = {};
       }
     }
 
-    var i, j, len, regxp = /\bsortable\b/, arrTbl = [],
-      tables = document.getElementsByTagName('table');
-
-    //  Look for tables which className attribute contains 'sortable'
-    //  and prepare them for sorting.
-    for (i = 0, j = 0, len = tables.length; i < len; i++) {
-      if (regxp.test(tables[i].className)) {
-        arrTbl[j] = tables[i];
-        prepareTables(arrTbl[j], j);
-        j++;
-      }
-    }
-    arrTbl = null;
+    // Prepare tables for sorting.
+    var tables = document.querySelectorAll('.sortable');
+    [].forEach.call(tables, function (tbl) {
+      prepareTables(tbl);
+    });
     tables = null;
   };
 
