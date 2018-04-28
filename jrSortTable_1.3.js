@@ -219,7 +219,7 @@ var jrSortTables = Object.create(null);
       // Create a RegExp with the names of the sort methods.
       var arr = [];
       for (var key in sortFunctions) {
-        if (sortFunctions.hasOwnProperty(key)) arr.push(i);
+        if (sortFunctions.hasOwnProperty(key)) arr.push(key);
       }
       var rxFn = new RegExp(arr.join('|'));
       // rxFn = /alphaNumeric|sortDate|sortDate_American|sortNumberJS|sortNumber_nonJS/;
@@ -229,6 +229,16 @@ var jrSortTables = Object.create(null);
         return (found) ? sortFunctions[found[0]] : '';
       }
 
+      // If there isn't a thead element in the table, let's create one.
+      if (tableElem.getElementsByTagName('thead').length === 0) {
+        var the = document.createElement('thead');
+        the.appendChild(tableElem.rows[0]);
+        tableElem.insertBefore(the, tableElem.firstChild);
+      }
+      // Old Safari versions don't support table.tHead
+      if (tableElem.tHead === null) {
+        tableElem.tHead = tableElem.getElementsByTagName('thead')[0];
+      }
       var thead = tableElem.tHead;
       var tbody = tableElem.tBodies[0];
 
@@ -260,8 +270,8 @@ var jrSortTables = Object.create(null);
 
     // Prepare tables for sorting.
     var tables = document.querySelectorAll('.sortable');
-    [].forEach.call(tables, function (tbl) {
-      prepareTables(tbl);
+    [].forEach.call(tables, function (tbl, idx) {
+      prepareTables(tbl, idx);
     });
     tables = null;
   };
