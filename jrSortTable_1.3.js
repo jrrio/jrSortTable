@@ -1,7 +1,7 @@
 /**
  * Sortable HTML table
- * @author Joao Rodrigues (JR) - Jan2009
- * @see Example at <https://codepen.io/jrio/pen/bvPmLo>
+ * @author Joao Rodrigues (JR)
+ * @see <https://github.com/jrrio/jrSortTable>
  * @version 1.3 - 2018-04-25 - IE11, Edge and modern browsers.
  */
 var jrSortTables = Object.create(null);
