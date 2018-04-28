@@ -2,12 +2,7 @@
  * Sortable HTML table
  * @author Joao Rodrigues (JR) - Jan2009
  * @see Example at <https://codepen.io/jrio/pen/bvPmLo>
- * @classDescription This code is intended to sort more than one table
- * at the same time, either by their thead or tfoot sections. After numerous
- * attempts, I discovered that the code runs much faster for large tables
- * whenever sorted 'tbody' and other frequently used properties
- * are stored in jrSortTables.tableProp.
- * @version 1.3 - 2018-04-25 - code optimizations. IE11, Edge and modern browsers.
+ * @version 1.3 - 2018-04-25 - IE11, Edge and modern browsers.
  */
 var jrSortTables = Object.create(null);
 
@@ -181,9 +176,6 @@ var jrSortTables = Object.create(null);
   jrSortTables.setup = function () {
 
     function prepareTables(tableElem, tblNumber) {
-      var thead, tbody, i, len, arrTh,
-          fn, rxFn, sortFunctions = jrSortTables.sort_functions,
-          arr = [];
 
       function addOnClickEvt() {
         jrSortTables.sort(tblNumber, this); // this refers to a th cell.
@@ -197,9 +189,10 @@ var jrSortTables = Object.create(null);
         }
       }
 
-      /** Try to guess the data type of the column's first cell. Assume
-       *  that the other cells of this column will have the same data type.
+      /** Guess the data type of the column's first cell. Assume that
+       *  the other cells of this column will have the same data type.
        */
+      var sortFunctions = jrSortTables.sort_functions;
       function guessDataType(txtCell) {
         var sortfn, testDate;
         if (txtCell.length > 0) {
@@ -214,7 +207,7 @@ var jrSortTables = Object.create(null);
               sortfn = sortFunctions.sortDate;
             } else if (parseInt(testDate[2], 10) > 12) { // mm/dd
               sortfn = sortFunctions.sortDate_American;
-            } else { // Sorry, we'll assume dd/mm
+            } else { // Assume dd/mm
               sortfn = sortFunctions.sortDate;
             }
           }
@@ -223,32 +216,30 @@ var jrSortTables = Object.create(null);
         return sortfn || sortFunctions.alphaNumeric;
       }
 
-      // Create a RegExp with the sort methods names.
-      for (i in sortFunctions) {
-        if (sortFunctions.hasOwnProperty(i)) arr.push(i);
+      // Create a RegExp with the names of the sort methods.
+      var arr = [];
+      for (var key in sortFunctions) {
+        if (sortFunctions.hasOwnProperty(key)) arr.push(i);
       }
-      rxFn = new RegExp(arr.join('|'));
+      var rxFn = new RegExp(arr.join('|'));
+      // rxFn = /alphaNumeric|sortDate|sortDate_American|sortNumberJS|sortNumber_nonJS/;
 
       function getSortFn(className) {
-        // var re = /alphaNumeric|sortDate|sortDate_American|sortNumberJS|sortNumber_nonJS/;
         var found = rxFn.exec(className);
         return (found) ? sortFunctions[found[0]] : '';
       }
 
-
-      thead = tableElem.tHead;
-      tbody = tableElem.tBodies[0];
-      //if (tbody.rows.length === 0) { return; }
+      var thead = tableElem.tHead;
+      var tbody = tableElem.tBodies[0];
 
       jrSortTables.tableProp[tblNumber] = {
-        "headerCells": [], // will contain [sortfn, sortdir, isSorted,
-        // currentSortedTBody] for each header cell.
+        "headerCells": [], // [sortfn, sortdir, isSorted, currentSortedTBody] for each header cell.
         "spanArrowId": "jrSortSpan" + tblNumber,
         "tbody": tbody
       };
 
-      arrTh = thead.rows[0].cells;
-      for (i = 0, len = arrTh.length; i < len; i++) {
+      var arrTh = thead.rows[0].cells, fn;
+      for (var i = 0, len = arrTh.length; i < len; i++) {
         arrTh[i].sortdir = 'up';
         arrTh[i].isSorted = false;
         fn = getSortFn(arrTh[i].className);
