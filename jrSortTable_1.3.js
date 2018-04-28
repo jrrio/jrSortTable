@@ -1,6 +1,7 @@
 /**
- * Sortable HTML table in vanilla JavaScript
- * @see <https://github.com/jrrio/jrSortTable>
+ * Sortable HTML table
+ * @author Joao Rodrigues (JR) - Jan2009
+ * @see Example at <https://codepen.io/jrio/pen/bvPmLo>
  * @version 1.3 - 2018-04-25 - IE11, Edge and modern browsers.
  */
 var jrSortTables = Object.create(null);
@@ -91,7 +92,7 @@ var jrSortTables = Object.create(null);
   };
 
   jrSortTables.sort_functions = (function () {
-    let aa, bb, tmpa, tmpb, date1, date2;
+    var aa, bb, tmpa, tmpb, date1, date2;
     return {
       alphaNumeric: function (a, b) {
         // a and b are arrays containing [cell text, cell's row].
@@ -145,7 +146,7 @@ var jrSortTables = Object.create(null);
       },
 
       sortNumberJS: function (a, b) {
-        let re = /[^\d.-]+/g; // remove the thousands separator, currency and % symbols
+        var re = /[^\d.-]+/g; // remove the thousands separator, currency and % symbols
         aa = a[0].replace(re, '').replace(/,/g, '');
         bb = b[0].replace(re, '').replace(/,/g, '');
         if (isNaN(aa)) { aa = 0; }
@@ -155,7 +156,7 @@ var jrSortTables = Object.create(null);
 
       sortNumber_nonJS: function (a, b) {
         // e.g. 23,478.96 in English/JS or 23.478,96 in Portuguese
-        let re = /[^\d,-]+/g; // remove the thousands separator, currency and % symbols
+        var re = /[^\d,-]+/g; // remove the thousands separator, currency and % symbols
         aa = a[0].replace(re, '').replace(/\./g, '');
         bb = b[0].replace(re, '').replace(/\./g, '');
         // Then exchange the decimal separator (comma) to a dot.
