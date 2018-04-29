@@ -1,8 +1,8 @@
 /**
  * Sortable HTML table
  * @author Joao Rodrigues (JR)
- * @see <https://github.com/jrrio/jrSortTable>
  * @version 1.3 - 2018-04-25 - IE11, Edge and modern browsers.
+ * @see <https://github.com/jrrio/jrSortTable>
  */
 var jrSortTables = Object.create(null);
 
@@ -15,20 +15,24 @@ var jrSortTables = Object.create(null);
   };
 
   /**
-   * tableProp array will be filled in the setup() function.
+   * Using jrSortTables.tableProp will speed up sorting of large tables, mainly in older IE versions.
+   * @property {array} tableProp will be filled in setup() and updated in sort().
    * tableProp[tblNumber] = {
-   *   'headerCells' : [], // contains [sortfn, sortdir, isSorted,
-   *                       // currentSortedTBody] for each header cell.
+   *   'headerCells' : [] containing an HTMLCollection of TH elements. Each of these THs will
+   *      receive the following properties: sortfn, sortdir, isSorted and currentSortedTBody.
    *   'spanArrowId' : "jrSortSpan" + tblNumber,
    *   'tbody' : tbody }
    */
   jrSortTables.tableProp = [];
 
+  /**
+   * Sorts a table by the specified TH column.
+   * If table is already sorted by this column, then just apply sorting;
+   * otherwise create currentSortedTBody for this th before applying sorting.
+   * @param {number} tblNumber - Number of the table in jrSortTables.tableProp.
+   * @param {HTMLElement} th - HTML <th> element
+   */
   jrSortTables.sort = function (tblNumber, th) {
-    // If table is already sorted by this column, then just apply sorting;
-    // otherwise create currentSortedTBody for this th before applying sorting.
-    // Using jrSortTables.tableProp will speed up code a lot, mainly in IE7.
-
     var column = th.cellIndex, prop = jrSortTables.tableProp[tblNumber],
       // tbody = th.offsetParent.tBodies[0],
       // each header cell contains [sortfn, sortdir, isSorted, currentSortedTBody]
@@ -36,8 +40,7 @@ var jrSortTables = Object.create(null);
       sortfn = header.sortfn, sort_direction = header.sortdir,
       isSorted = header.isSorted, i, tbr, len, row,
       currentSortedTBody = header.currentSortedTBody,
-      fragment = document.createDocumentFragment(),
-      newSpanElem, paren, oldSpanElem;
+      fragment = document.createDocumentFragment();
 
     if (isSorted) { // tbody is already sorted
       sort_direction = (sort_direction === 'up') ? 'down' : 'up';
@@ -61,7 +64,7 @@ var jrSortTables = Object.create(null);
        currentSortedTBody is an array containing array elements: ['the key for sorting', row]
        */
       currentSortedTBody = [];
-      // set sort_direction = 'up' in the first time.
+      // set sort_direction = 'up' at the first time.
       for (i = 0, tbr = tbody.rows, len = tbr.length; i < len; i++) {
         row = tbr[i];
         currentSortedTBody[currentSortedTBody.length] = [this.getElementText(row.cells[column]), row];
@@ -73,16 +76,16 @@ var jrSortTables = Object.create(null);
         fragment.appendChild(row);
       }
     }
-    // Append fragment to tbody in just one operation.
     tbody.appendChild(fragment);
 
     // Finally, change the arrow direction in the th node
-    oldSpanElem = document.getElementById(prop.spanArrowId);
+    var oldSpanElem = document.getElementById(prop.spanArrowId);
     if (oldSpanElem) {
-      paren = oldSpanElem.parentNode; // th node that contains span node.
+      var paren = oldSpanElem.parentNode; // th node that contains span node.
       paren.removeChild(oldSpanElem);
     }
-    (newSpanElem = document.createElement('span')).id = prop.spanArrowId;
+    var newSpanElem = document.createElement('span');
+    newSpanElem.id = prop.spanArrowId;
     newSpanElem.innerHTML = jrSortTables.arrows[sort_direction];
     th.appendChild(newSpanElem);
 
@@ -92,13 +95,11 @@ var jrSortTables = Object.create(null);
   };
 
   jrSortTables.sort_functions = (function () {
-    var aa, bb, tmpa, tmpb, date1, date2;
     return {
       alphaNumeric: function (a, b) {
         // a and b are arrays containing [cell text, cell's row].
         // sort in the following sequence: empty string, number then non-empty string
-        aa = a[0];
-        bb = b[0];
+        var aa = a[0], bb = b[0], tmpa, tmpb;
         if (aa.search(/^0+.*$/) === 0) {
           // parseFloat('0123') returns 123 which is bad because we'd need '0123'.
           tmpa = aa;
@@ -107,13 +108,11 @@ var jrSortTables = Object.create(null);
           // parseFloat('a123') and parseFloat('abc') return NaN.
           tmpa = (aa.length) ? (isNaN(tmpa = parseFloat(aa)) ? aa : tmpa) : 0;
         }
-
         if (bb.search(/^0+.*$/) === 0) {
           tmpb = bb;
         } else {
           tmpb = (bb.length) ? (isNaN(tmpb = parseFloat(bb)) ? bb : tmpb) : 0;
         }
-
         if (typeof tmpa == 'string' && typeof tmpb == 'string') {
           return tmpa.localeCompare(tmpb); // Take accented and case-sensitive chars into account
         }
@@ -125,21 +124,18 @@ var jrSortTables = Object.create(null);
       },
 
       sortDate: function (a, b) { // dd/mm/yyyy
-        aa = a[0];
-        bb = b[0];
-        date1 = aa.substr(6, 4) + aa.substr(3, 2) + aa.substr(0, 2); // turns dd-mm-yyyy into yyyymmdd
-        date2 = bb.substr(6, 4) + bb.substr(3, 2) + bb.substr(0, 2);
+        var aa = a[0], bb = b[0];
+        var date1 = aa.substr(6, 4) + aa.substr(3, 2) + aa.substr(0, 2); // turns dd-mm-yyyy into yyyymmdd
+        var date2 = bb.substr(6, 4) + bb.substr(3, 2) + bb.substr(0, 2);
         if (date1 === date2) { return 0; }
         if (date1 < date2) { return -1; }
         return 1;
       },
 
       sortDate_American: function (a, b) { // mm/dd/yyyy
-        // a and b are arrays containing [cell text, cell's row].
-        aa = a[0];
-        bb = b[0];
-        date1 = aa.substr(6, 4) + aa.substr(0, 2) + aa.substr(3, 2); // turns mm-dd-yyyy into yyyymmdd
-        date2 = bb.substr(6, 4) + bb.substr(0, 2) + bb.substr(3, 2);
+        var aa = a[0], bb = b[0];
+        var date1 = aa.substr(6, 4) + aa.substr(0, 2) + aa.substr(3, 2); // turns mm-dd-yyyy into yyyymmdd
+        var date2 = bb.substr(6, 4) + bb.substr(0, 2) + bb.substr(3, 2);
         if (date1 === date2) { return 0; }
         if (date1 < date2) { return -1; }
         return 1;
@@ -147,8 +143,8 @@ var jrSortTables = Object.create(null);
 
       sortNumberJS: function (a, b) {
         var re = /[^\d.-]+/g; // remove the thousands separator, currency and % symbols
-        aa = a[0].replace(re, '').replace(/,/g, '');
-        bb = b[0].replace(re, '').replace(/,/g, '');
+        var aa = a[0].replace(re, '').replace(/,/g, '');
+        var bb = b[0].replace(re, '').replace(/,/g, '');
         if (isNaN(aa)) { aa = 0; }
         if (isNaN(bb)) { bb = 0; }
         return aa - bb;
@@ -157,8 +153,8 @@ var jrSortTables = Object.create(null);
       sortNumber_nonJS: function (a, b) {
         // e.g. 23,478.96 in English/JS or 23.478,96 in Portuguese
         var re = /[^\d,-]+/g; // remove the thousands separator, currency and % symbols
-        aa = a[0].replace(re, '').replace(/\./g, '');
-        bb = b[0].replace(re, '').replace(/\./g, '');
+        var aa = a[0].replace(re, '').replace(/\./g, '');
+        var bb = b[0].replace(re, '').replace(/\./g, '');
         // Then exchange the decimal separator (comma) to a dot.
         aa = aa.replace(/,/, '.');
         bb = bb.replace(/,/, '.');
