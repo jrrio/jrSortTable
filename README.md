@@ -13,7 +13,7 @@ The code tries to guess the value type (Number, Date, String) of each column bas
 
 *   **alphaNumeric** - mixed numbers and strings.
 *   **sortDate** - dd/mm/yyyy format (default).
-*   **sortDate_American** - mm/dd/yyyy format.
+*   **sortDate_US** - mm/dd/yyyy format.
 *   **sortNumberJS** - 5,625.78 (default).
 *   **sortNumber_nonJS** -  5.625,78 (see the **note** below).
 
@@ -29,4 +29,4 @@ There is an example on [Codepen](https://codepen.io/jrio/pen/bvPmLo).
 * @version 0.9 - 2011-12-15 - code optimizations.
 * @version 1.1 - 2012-02-18 - more optimizations, allow sorting non JS numbers such as 1.453.932,67, and use of specific class names in TH cells to define the sort method.
 * @version 1.2 - 2018-04-23 - fixed issues with negative numbers.
-* @version 1.3 - 2018-04-25 - Removed support for ancient browsers (IE7, Safari 3). Now the code runs only in IE11, Edge and other modern browsers.
+* @version 1.3 - 2018-04-29 - Removed support for ancient browsers (IE7, Safari 3). Now the code runs only in IE11, Edge and other modern browsers.
