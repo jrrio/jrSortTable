@@ -19,7 +19,13 @@ The code tries to guess the value type (Number, Date, String) of each column bas
 
 **Note:** By default, the code expects numbers formatted as "9,999.99" (UK, USA, etc.). So, if you need to sort numbers formatted as "9.999,99" (comma as the decimal separator and period as the thousands separator), you will need to set the *class* attribute of the *TH* element (column) with *sortNumber_nonJS*.
 
+# Example
+
 There is an example on [Codepen](https://codepen.io/jrio/pen/bvPmLo).
+
+# License
+
+This repository has been released under the [MIT License](https://github.com/jrrio/jrSortTable/blob/master/LICENSE).
 
 # Changelog
 
