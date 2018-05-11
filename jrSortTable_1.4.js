@@ -1,7 +1,7 @@
 /**
  * Sortable HTML table
  * @author Joao Rodrigues (JR)
- * @version 1.3 - 2018-04-29 - IE11, Edge and modern browsers.
+ * @version 1.4 - 2018-05-11 - IE11, Edge and modern browsers.
  * @see <https://github.com/jrrio/jrSortTable>
  */
 var jrSortTable = Object.create(null);
@@ -143,8 +143,8 @@ var jrSortTable = Object.create(null);
 
     obj.sortNumberJS = function (a, b) {
       var re = /[^\d.-]+/g; // remove the thousands separator, currency and % symbols
-      var aa = a[0].replace(re, '').replace(/,/g, '');
-      var bb = b[0].replace(re, '').replace(/,/g, '');
+      var aa = a[0].replace(re, '');
+      var bb = b[0].replace(re, '');
       if (isNaN(aa)) aa = 0;
       if (isNaN(bb)) bb = 0;
       return aa - bb;
@@ -153,8 +153,8 @@ var jrSortTable = Object.create(null);
     obj.sortNumber_nonJS = function (a, b) {
       // e.g. 23,478.96 in English/JS == 23.478,96 in other countries.
       var re = /[^\d,-]+/g; // remove the thousands separator, currency and % symbols
-      var aa = a[0].replace(re, '').replace(/\./g, '');
-      var bb = b[0].replace(re, '').replace(/\./g, '');
+      var aa = a[0].replace(re, '');
+      var bb = b[0].replace(re, '');
       // Then exchange the decimal separator (comma) to a dot.
       aa = aa.replace(/,/, '.');
       bb = bb.replace(/,/, '.');
