@@ -1,7 +1,8 @@
-/**
+/*
  * Sortable HTML table
  * @author Joao Rodrigues (JR)
  * @version 1.4 - 2018-05-11 - IE11, Edge and modern browsers.
+ * @version 1.5 - 2024-02-03 - 'nosort' check included in the classNames.
  * @see <https://github.com/jrrio/jrSortTable>
  */
 var jrSortTable = Object.create(null);
@@ -162,6 +163,9 @@ var jrSortTable = Object.create(null);
       if (isNaN(bb)) bb = 0;
       return aa - bb;
     };
+    obj.nosort = function (a, b) {
+      return;
+    };
     return obj;
   }(Object.create(null)));
 
@@ -181,7 +185,10 @@ var jrSortTable = Object.create(null);
       var addEvent = function (row) {
         var cells = row.cells, len = cells.length;
         while (len--) {
-          cells[len].onclick = addOnClickEvt;
+          // avoid nosort className
+          if (cells[len].className.search(/nosort/) === -1) {
+            cells[len].onclick = addOnClickEvt;
+          }
         }
       };
       var sortMethods = jrSortTable.sortMethods;
@@ -244,9 +251,7 @@ var jrSortTable = Object.create(null);
         arrTh[i].sortdir = 'up';
         arrTh[i].isSorted = false;
         fn = getSortFn(arrTh[i].className);
-        arrTh[i].sortfn = fn || guessDataType(
-          _getElementText(tbody.rows[0].cells[i])
-        );
+        arrTh[i].sortfn = fn || guessDataType(_getElementText(tbody.rows[0].cells[i]));
       }
       jrSortTable.tableProp[tblNumber].headerCells = arrTh;
 
