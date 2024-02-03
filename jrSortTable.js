@@ -2,7 +2,7 @@
  * Sortable HTML table
  * @author Joao Rodrigues (JR)
  * @version 1.4 - 2018-05-11 - IE11, Edge and modern browsers.
- * @version 1.5 - 2024-02-03 - 'nosort' check included in the classNames.
+ * @version 1.5 - 2024-02-03 - 'nosort' className included in order to disable table sorting.
  * @see <https://github.com/jrrio/jrSortTable>
  */
 var jrSortTable = Object.create(null);
