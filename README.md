@@ -14,7 +14,7 @@ The code tries to guess the value type (Number, Date, String) of each column bas
 *   **nosort** - sorting disabled.
 *   **alphaNumeric** - mixed numbers and strings.
 *   **sortDate** - dd/mm/yyyy format (default).
-*   **sortDate_US** - mm/dd/yyyy format.
+*   **sortUSDate** - mm/dd/yyyy format.
 *   **sortNumberJS** - 5,625.78 (default).
 *   **sortNumber_nonJS** -  5.625,78 (see the **note** below).
 
@@ -39,3 +39,4 @@ This repository has been released under the [MIT License](https://github.com/jrr
 * @version 1.3 - 2018-04-29 - Removed support for ancient browsers (IE7, Safari 2). Now the code runs only in IE11, Edge and other modern browsers.
 * @version 1.4 - 2018-05-11 - Removed unnecessary replace() in sortNumberJS() and sortNumber_nonJS() of jrSortTable.sortMethods.
 * @version 1.5 - 2024-02-03 - 'nosort' className included in order to disable table sorting.
+* @version 2.0 - 2024-02-14 - modern browsers.
